@@ -1,0 +1,1 @@
+A 3D voxel character holding a sign that says "image", colorful style.

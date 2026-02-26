@@ -1,0 +1,1 @@
+a text message bubble that says "wait just 100K steps??", chat interface.

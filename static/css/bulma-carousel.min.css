@@ -1,0 +1,13 @@
+/* Minimal carousel styles - the main styles are in index.html */
+.carousel {
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-item {
+    display: none;
+}
+
+.carousel-item.is-active {
+    display: block;
+}
