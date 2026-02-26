@@ -1,0 +1,17 @@
+# Core dependencies for Self-Flow ImageNet inference
+torch>=2.0.0
+torchvision>=0.15.0
+diffusers>=0.25.0
+transformers>=4.30.0
+timm>=0.9.0
+
+# Numerical and image processing
+numpy>=1.24.0
+scipy>=1.10.0  # For ADM evaluator (FID calculation)
+Pillow>=9.0.0
+einops>=0.6.0
+tqdm>=4.65.0
+
+# Evaluation dependencies
+tensorflow>=2.10.0  # For ADM evaluator
+
