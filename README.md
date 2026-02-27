@@ -4,7 +4,7 @@ This folder contains inference code for generating images with our Self-Flow tra
 
 ## Overview
 
-**Self-Flow** (Self-Supervised Flow Matching for Scalable Multi-Modal Synthesis) is a training method for diffusion transformers that combines the flow matching objective with a self-supervised feature reconstruction objective.
+**Self-Flow** (Self-Supervised Flow Matching for Scalable Multi-Modal Synthesis) is a training framework that combines the flow matching objective with a self-supervised feature reconstruction objective.
 
 This inference code allows you to:
 
@@ -68,7 +68,7 @@ wget https://openaipublic.blob.core.windows.net/diffusion/jul-2021/ref_batches/i
 ```bash
 python evaluator.py \
     VIRTUAL_imagenet256_labeled.npz \
-    ./samples/samples_50000.npz
+    ./samples/samples_50000.npz ./samples
 ```
 
 ## Model Architecture
