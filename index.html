@@ -623,10 +623,9 @@
         }
         
         .t2av-wrapper.playing .t2av-play-overlay,
-        .t2av-wrapper.played .t2av-play-overlay {
-            opacity: 0;
-            pointer-events: none;
-            visibility: hidden;
+        .t2av-wrapper.played .t2av-play-overlay,
+        .t2av-wrapper.loading .t2av-play-overlay {
+            display: none !important;
         }
         
         /* Loading spinner */
@@ -643,11 +642,6 @@
             display: flex;
         }
         
-        .t2av-wrapper.loading .t2av-play-overlay {
-            opacity: 0;
-            pointer-events: none;
-            visibility: hidden;
-        }
         
         .spinner {
             width: 48px;
