@@ -38,6 +38,10 @@
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
+        html {
+            scroll-behavior: smooth;
+        }
+        
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-primary);
@@ -717,6 +721,17 @@
             .prompt-text {
                 min-height: 2rem;
             }
+            /* T2AV mobile: stack videos vertically */
+            .t2av-comparison {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .t2av-item {
+                max-width: 100%;
+            }
+            .t2av-play-overlay {
+                top: calc(50% - 1.5rem);
+            }
         }
         
         @media (max-width: 480px) {
@@ -724,6 +739,181 @@
             .comparison-grid.video-grid,
             .comparison-grid.audio-grid,
             .comparison-grid.teaser-grid { grid-template-columns: 1fr; }
+        }
+        
+        /* ===== SIDEBAR NAVIGATION ===== */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 260px;
+            background: var(--bg-primary);
+            border-right: 1px solid var(--border-subtle);
+            padding: 1.5rem 0;
+            z-index: 1000;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar.open {
+            transform: translateX(0);
+        }
+        
+        .sidebar-header {
+            padding: 0.75rem 1.25rem 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidebar-title {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+        
+        .sidebar-close {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .sidebar-close:hover {
+            background: var(--bg-secondary);
+        }
+        
+        .sidebar-close svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--text-secondary);
+        }
+        
+        /* Hide hamburger when sidebar is open */
+        .sidebar-toggle.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-nav > li {
+            margin-bottom: 0;
+        }
+        
+        .sidebar-link {
+            display: block;
+            padding: 0.65rem 1.25rem;
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-link:hover {
+            color: var(--accent);
+            background: var(--bg-secondary);
+            border-left-color: var(--accent-light);
+        }
+        
+        .sidebar-link.active {
+            color: var(--accent);
+            background: var(--bg-secondary);
+            border-left-color: var(--accent);
+            font-weight: 500;
+        }
+        
+        .sidebar-link.sub {
+            padding-left: 2.25rem;
+            font-size: 0.9rem;
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+        
+        .sidebar-section {
+            margin-top: 0.25rem;
+        }
+        
+        .sidebar-section-title {
+            display: block;
+            padding: 0.65rem 1.25rem;
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            border-left: 3px solid transparent;
+        }
+        
+        .sidebar-subnav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-toggle {
+            display: flex;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 1001;
+            width: 44px;
+            height: 44px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+            transition: var(--transition);
+        }
+        
+        .sidebar-toggle:hover {
+            background: var(--bg-secondary);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        
+        .sidebar-toggle svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--text-primary);
+        }
+        
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .sidebar-overlay.open {
+            opacity: 1;
+            visibility: visible;
         }
         
         /* ===== QUANTITATIVE TEASER ===== */
@@ -853,7 +1043,49 @@
 </head>
 <body>
 
-<header>
+<!-- Sidebar Navigation -->
+<button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle navigation">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+</button>
+<div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+<nav class="sidebar">
+    <div class="sidebar-header">
+        <p class="sidebar-title">Navigation</p>
+        <button class="sidebar-close" onclick="toggleSidebar()" aria-label="Close navigation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+    </div>
+    <ul class="sidebar-nav">
+        <li><a href="#top" class="sidebar-link" onclick="smoothScrollTo(event, 'top')">Top</a></li>
+        <li><a href="#abstract" class="sidebar-link" onclick="smoothScrollTo(event, 'abstract')">Abstract</a></li>
+        <li><a href="#method" class="sidebar-link" onclick="smoothScrollTo(event, 'method')">Method Overview</a></li>
+        <li class="sidebar-section">
+            <span class="sidebar-section-title">Multi-Modal Results</span>
+            <ul class="sidebar-subnav">
+                <li><a href="#teaser-images-section" class="sidebar-link sub" onclick="smoothScrollTo(event, 'teaser-images-section')">Image</a></li>
+                <li><a href="#teaser-videos-section" class="sidebar-link sub" onclick="smoothScrollTo(event, 'teaser-videos-section')">Video</a></li>
+                <li><a href="#t2av-section" class="sidebar-link sub" onclick="smoothScrollTo(event, 't2av-section')">Video-Audio</a></li>
+            </ul>
+        </li>
+        <li class="sidebar-section">
+            <span class="sidebar-section-title">Baseline Comparisons</span>
+            <ul class="sidebar-subnav">
+                <li><a href="#images" class="sidebar-link sub" onclick="smoothScrollTo(event, 'images')">Image</a></li>
+                <li><a href="#videos" class="sidebar-link sub" onclick="smoothScrollTo(event, 'videos')">Video</a></li>
+                <li><a href="#audio" class="sidebar-link sub" onclick="smoothScrollTo(event, 'audio')">Audio</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+
+<header id="top">
     <h1>Self-Supervised Flow Matching for Scalable Multi-Modal Synthesis</h1>
     <div class="title-underline"></div>
     <div class="authors">
@@ -909,7 +1141,7 @@
             <img src="figures/scaling_flops.png" alt="Scaling vs FLOPs" loading="lazy">
         </figure>
     </div>
-    <p class="quant-description"><strong>Scaling behavior.</strong> As model size increases (290M → 420M → 625M → 1B parameters), the performance gap between our method and REPA widens. Notably, our 625M variant outperforms the 1B REPA model. Our method effectively leverages increased compute, while REPA shows diminishing returns.</p>
+    <p class="quant-description"><strong>Scaling behavior (Text-to-Image).</strong> As model size increases (290M → 420M → 625M → 1B parameters), the performance gap between our method and REPA widens. Notably, our 625M variant outperforms the 1B REPA model. Our method effectively leverages increased compute, while REPA shows diminishing returns.</p>
 </section>
 
 <hr>
@@ -931,7 +1163,7 @@
         <p class="section-description">We benchmark our method against vanilla flow matching on a scaled multi-modal experiment where a <strong>single 4B parameter</strong> FLUX2 backbone is trained to jointly generate images, videos and audio. The results presented were obtained with just <strong>100k training steps</strong> of high resolution fine-tuning over a low resolution multi-modal model, on data containing just <strong>6M training videos</strong> and <strong>200M training images</strong>. Our method produces significant improvements in structural coherence (faces, hands), motion quality, and text rendering accuracy.</p>
     </div>
     
-    <h3 style="font-family: 'Source Serif 4', serif; font-size: 1.3rem; margin: 2rem 0 0.5rem; color: var(--text-secondary);">Image Samples</h3>
+    <h3 id="teaser-images-section" style="font-family: 'Source Serif 4', serif; font-size: 1.3rem; margin: 2rem 0 0.5rem; color: var(--text-secondary);">Image Samples</h3>
     <p class="subsection-description"><strong>4B parameter</strong> model trained on <strong>200M images</strong> for <strong>100k steps</strong>.</p>
     <div class="carousel-container">
         <button class="carousel-nav prev" onclick="prevSlide('teaser-images')">
@@ -1530,7 +1762,7 @@
         <span class="carousel-indicator" onclick="goToSlide('teaser-images', 31)"></span>
     </div>
     
-    <h3 style="font-family: 'Source Serif 4', serif; font-size: 1.3rem; margin: 2rem 0 0.5rem; color: var(--text-secondary);">Video Samples</h3>
+    <h3 id="teaser-videos-section" style="font-family: 'Source Serif 4', serif; font-size: 1.3rem; margin: 2rem 0 0.5rem; color: var(--text-secondary);">Video Samples</h3>
     <p class="subsection-description"><strong>4B parameter</strong> model trained on <strong>6M videos</strong> for <strong>100k steps</strong>.</p>
     <div class="carousel-container">
         <button class="carousel-nav prev" onclick="prevSlide('teaser')">
@@ -1905,7 +2137,7 @@
         <span class="carousel-indicator" onclick="goToSlide('teaser', 15)"></span>
     </div>
     
-    <h3 style="font-family: 'Source Serif 4', serif; font-size: 1.3rem; margin: 2rem 0 0.5rem; color: var(--text-secondary);">Joint Video-Audio Samples</h3>
+    <h3 id="t2av-section" style="font-family: 'Source Serif 4', serif; font-size: 1.3rem; margin: 2rem 0 0.5rem; color: var(--text-secondary);">Joint Video-Audio Samples</h3>
     <p class="subsection-description"><strong>4B parameter</strong> model trained on <strong>2M audio-video pairs</strong> for <strong>100k steps</strong>. Click play to watch baseline and ours sequentially.</p>
     <div class="carousel-container">
         <button class="carousel-nav prev" onclick="prevSlide('t2av')">
@@ -4455,13 +4687,20 @@
     }, { rootMargin: '200px' });
 
     // ── Initialization ────────────────────────────────────────────
-    document.addEventListener('DOMContentLoaded', function() {
+    function initCarousels() {
         document.querySelectorAll('[id$="-carousel"]').forEach(carousel => {
             const id = carousel.id.replace('-carousel', '');
             const slides = carousel.querySelectorAll('.carousel-slide');
             carouselState[id] = { current: 0, total: slides.length };
             showSlide(id);
+            
+            // Set up swipe support
+            setupSwipe(carousel, id);
         });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initCarousels();
 
         document.querySelectorAll('section[id]').forEach(section => {
             sectionObserver.observe(section);
@@ -4474,7 +4713,58 @@
                 });
             });
         });
+        
+        // Force load first visible carousels immediately
+        ['teaser-images', 'teaser', 't2av'].forEach(id => {
+            if (carouselState[id]) loadCarouselWindow(id);
+        });
+        
+        // Fallback: ensure all visible content loads after a short delay
+        setTimeout(() => {
+            Object.keys(carouselState).forEach(id => {
+                const carousel = document.getElementById(`${id}-carousel`);
+                if (carousel && isInViewport(carousel)) {
+                    loadCarouselWindow(id);
+                }
+            });
+        }, 500);
     });
+    
+    // ── Swipe Support ──────────────────────────────────────────────
+    function setupSwipe(carousel, carouselId) {
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+        const minSwipeDistance = 50;
+        
+        carousel.addEventListener('touchstart', function(e) {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+        
+        carousel.addEventListener('touchend', function(e) {
+            touchEndX = e.changedTouches[0].screenX;
+            touchEndY = e.changedTouches[0].screenY;
+            handleSwipe(carouselId);
+        }, { passive: true });
+        
+        function handleSwipe(id) {
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+            
+            // Only trigger if horizontal swipe is greater than vertical (prevents scroll interference)
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
+                if (deltaX < 0) {
+                    // Swipe left -> next slide
+                    nextSlide(id);
+                } else {
+                    // Swipe right -> previous slide
+                    prevSlide(id);
+                }
+            }
+        }
+    }
 
     // ── T2AV Sequential Playback ──────────────────────────────────
     function playT2avSequential(slideIndex) {
@@ -4521,6 +4811,148 @@
             status.classList.remove('active');
         };
     }
+
+    // ── Sidebar Navigation ─────────────────────────────────────────
+    function toggleSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.sidebar-overlay');
+        const toggle = document.querySelector('.sidebar-toggle');
+        const isOpen = sidebar.classList.toggle('open');
+        overlay.classList.toggle('open', isOpen);
+        toggle.classList.toggle('hidden', isOpen);
+    }
+
+    function closeSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.querySelector('.sidebar-overlay');
+        const toggle = document.querySelector('.sidebar-toggle');
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
+        toggle.classList.remove('hidden');
+    }
+    
+    function smoothScrollTo(event, targetId) {
+        event.preventDefault();
+        closeSidebar();
+        const target = document.getElementById(targetId);
+        if (target) {
+            const offset = 20; // Small offset from top
+            const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+            window.scrollTo({
+                top: targetPosition,
+                behavior: 'smooth'
+            });
+        }
+    }
+
+    // Highlight active sidebar link on scroll
+    function updateActiveSidebarLink() {
+        const sections = ['top', 'abstract', 'method', 'teaser-images-section', 'teaser-videos-section', 't2av-section', 'images', 'videos', 'audio'];
+        const scrollPos = window.scrollY + 150;
+        
+        let activeId = sections[0];
+        sections.forEach(id => {
+            const el = document.getElementById(id);
+            if (el && el.getBoundingClientRect().top + window.scrollY <= scrollPos) {
+                activeId = id;
+            }
+        });
+        
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            const href = link.getAttribute('href').substring(1);
+            link.classList.toggle('active', href === activeId);
+        });
+    }
+
+    window.addEventListener('scroll', updateActiveSidebarLink);
+    document.addEventListener('DOMContentLoaded', updateActiveSidebarLink);
+
+    // ── Mobile carousel adjustment ─────────────────────────────────
+    // On mobile, we split multi-sample slides into individual slides
+    let originalSlides = {};
+    let isMobileLayout = false;
+
+    function reorganizeForMobile() {
+        const isMobile = window.innerWidth <= 768;
+        
+        if (isMobile && !isMobileLayout) {
+            // Switching to mobile: split slides
+            document.querySelectorAll('[id$="-carousel"]').forEach(carousel => {
+                const carouselId = carousel.id.replace('-carousel', '');
+                const slides = carousel.querySelectorAll('.carousel-slide');
+                
+                // Store original HTML
+                originalSlides[carouselId] = carousel.innerHTML;
+                
+                // Collect all sample cards
+                const allCards = [];
+                slides.forEach(slide => {
+                    slide.querySelectorAll('.sample-card').forEach(card => {
+                        allCards.push(card.outerHTML);
+                    });
+                });
+                
+                // Create new slides with 1 card each
+                carousel.innerHTML = allCards.map(card => 
+                    `<div class="carousel-slide">${card}</div>`
+                ).join('');
+                
+                // Update carousel state
+                const newSlides = carousel.querySelectorAll('.carousel-slide');
+                carouselState[carouselId] = { current: 0, total: newSlides.length };
+                
+                // Update indicators
+                const indicatorContainer = document.getElementById(`${carouselId}-indicators`);
+                if (indicatorContainer) {
+                    indicatorContainer.innerHTML = Array.from({length: newSlides.length}, (_, i) =>
+                        `<span class="carousel-indicator${i === 0 ? ' active' : ''}" onclick="goToSlide('${carouselId}', ${i})"></span>`
+                    ).join('');
+                }
+                
+                showSlide(carouselId);
+                setupSwipe(carousel, carouselId);
+                loadCarouselWindow(carouselId);
+            });
+            isMobileLayout = true;
+        } else if (!isMobile && isMobileLayout) {
+            // Switching to desktop: restore original slides
+            document.querySelectorAll('[id$="-carousel"]').forEach(carousel => {
+                const carouselId = carousel.id.replace('-carousel', '');
+                if (originalSlides[carouselId]) {
+                    carousel.innerHTML = originalSlides[carouselId];
+                    
+                    const slides = carousel.querySelectorAll('.carousel-slide');
+                    carouselState[carouselId] = { current: 0, total: slides.length };
+                    
+                    // Restore indicators
+                    const indicatorContainer = document.getElementById(`${carouselId}-indicators`);
+                    if (indicatorContainer) {
+                        indicatorContainer.innerHTML = Array.from({length: slides.length}, (_, i) =>
+                            `<span class="carousel-indicator${i === 0 ? ' active' : ''}" onclick="goToSlide('${carouselId}', ${i})"></span>`
+                        ).join('');
+                    }
+                    
+                    showSlide(carouselId);
+                    setupSwipe(carousel, carouselId);
+                    loadCarouselWindow(carouselId);
+                }
+            });
+            isMobileLayout = false;
+        }
+    }
+
+    // Run on load and resize (with debounce for resize)
+    let resizeTimeout;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(reorganizeForMobile, 150);
+    });
+    
+    // Initialize after DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        // Small delay to ensure carousels are initialized first
+        setTimeout(reorganizeForMobile, 100);
+    });
 </script>
 
 </body>
