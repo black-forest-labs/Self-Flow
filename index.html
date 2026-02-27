@@ -626,11 +626,40 @@
         .t2av-wrapper.played .t2av-play-overlay {
             opacity: 0;
             pointer-events: none;
-            transform: translate(-50%, -50%) scale(0.8);
+            visibility: hidden;
         }
         
-        .t2av-wrapper.playing .t2av-play-overlay {
-            transition: opacity 0.2s ease, transform 0.2s ease;
+        /* Loading spinner */
+        .t2av-loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            display: none;
+        }
+        
+        .t2av-wrapper.loading .t2av-loader {
+            display: flex;
+        }
+        
+        .t2av-wrapper.loading .t2av-play-overlay {
+            opacity: 0;
+            pointer-events: none;
+            visibility: hidden;
+        }
+        
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--border-subtle);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
         
         .t2av-status {
@@ -2174,6 +2203,9 @@
                     <div class="t2av-play-overlay" onclick="playT2avSequential(0)">
                         <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                     </div>
+                    <div class="t2av-loader">
+                        <div class="spinner"></div>
+                    </div>
                 </div>
                 <p class="t2av-status"></p>
                 <p class="prompt-text">"close up on the face of a man saying "I love the Black Forest"."</p>
@@ -2200,6 +2232,9 @@
                     </div>
                     <div class="t2av-play-overlay" onclick="playT2avSequential(1)">
                         <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div class="t2av-loader">
+                        <div class="spinner"></div>
                     </div>
                 </div>
                 <p class="t2av-status"></p>
@@ -2228,6 +2263,9 @@
                     <div class="t2av-play-overlay" onclick="playT2avSequential(2)">
                         <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                     </div>
+                    <div class="t2av-loader">
+                        <div class="spinner"></div>
+                    </div>
                 </div>
                 <p class="t2av-status"></p>
                 <p class="prompt-text">"a glass shattering as it hits the floor, fragments scattering in all directions."</p>
@@ -2254,6 +2292,9 @@
                     </div>
                     <div class="t2av-play-overlay" onclick="playT2avSequential(3)">
                         <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div class="t2av-loader">
+                        <div class="spinner"></div>
                     </div>
                 </div>
                 <p class="t2av-status"></p>
@@ -2282,6 +2323,9 @@
                     <div class="t2av-play-overlay" onclick="playT2avSequential(4)">
                         <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                     </div>
+                    <div class="t2av-loader">
+                        <div class="spinner"></div>
+                    </div>
                 </div>
                 <p class="t2av-status"></p>
                 <p class="prompt-text">"close up on the face of a welcoming woman by a wooden gate, forest path behind, saying "Come visit us"."</p>
@@ -2308,6 +2352,9 @@
                     </div>
                     <div class="t2av-play-overlay" onclick="playT2avSequential(5)">
                         <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div class="t2av-loader">
+                        <div class="spinner"></div>
                     </div>
                 </div>
                 <p class="t2av-status"></p>
@@ -2336,6 +2383,9 @@
                     <div class="t2av-play-overlay" onclick="playT2avSequential(6)">
                         <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                     </div>
+                    <div class="t2av-loader">
+                        <div class="spinner"></div>
+                    </div>
                 </div>
                 <p class="t2av-status"></p>
                 <p class="prompt-text">"a realistic video of an astronaut riding a horse saying "I love Self-Flow"."</p>
@@ -2362,6 +2412,9 @@
                     </div>
                     <div class="t2av-play-overlay" onclick="playT2avSequential(7)">
                         <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div class="t2av-loader">
+                        <div class="spinner"></div>
                     </div>
                 </div>
                 <p class="t2av-status"></p>
@@ -2390,6 +2443,9 @@
                     <div class="t2av-play-overlay" onclick="playT2avSequential(8)">
                         <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                     </div>
+                    <div class="t2av-loader">
+                        <div class="spinner"></div>
+                    </div>
                 </div>
                 <p class="t2av-status"></p>
                 <p class="prompt-text">"close up on the face of a researcher in a tech lab, screens glowing behind, saying "Welcome to Black Forest Labs"."</p>
@@ -2416,6 +2472,9 @@
                     </div>
                     <div class="t2av-play-overlay" onclick="playT2avSequential(9)">
                         <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div class="t2av-loader">
+                        <div class="spinner"></div>
                     </div>
                 </div>
                 <p class="t2av-status"></p>
@@ -2444,6 +2503,9 @@
                     <div class="t2av-play-overlay" onclick="playT2avSequential(10)">
                         <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                     </div>
+                    <div class="t2av-loader">
+                        <div class="spinner"></div>
+                    </div>
                 </div>
                 <p class="t2av-status"></p>
                 <p class="prompt-text">"close up on the face of an elder man by a campfire, sparks rising, saying "Stories from the forest"."</p>
@@ -2470,6 +2532,9 @@
                     </div>
                     <div class="t2av-play-overlay" onclick="playT2avSequential(11)">
                         <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div class="t2av-loader">
+                        <div class="spinner"></div>
                     </div>
                 </div>
                 <p class="t2av-status"></p>
@@ -2498,6 +2563,9 @@
                     <div class="t2av-play-overlay" onclick="playT2avSequential(12)">
                         <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                     </div>
+                    <div class="t2av-loader">
+                        <div class="spinner"></div>
+                    </div>
                 </div>
                 <p class="t2av-status"></p>
                 <p class="prompt-text">"close up on the face of a man saying "This is just the beginning"."</p>
@@ -2525,6 +2593,9 @@
                     <div class="t2av-play-overlay" onclick="playT2avSequential(13)">
                         <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
                     </div>
+                    <div class="t2av-loader">
+                        <div class="spinner"></div>
+                    </div>
                 </div>
                 <p class="t2av-status"></p>
                 <p class="prompt-text">"close up on the face of a man saying "The sky is blue"."</p>
@@ -2551,6 +2622,9 @@
                     </div>
                     <div class="t2av-play-overlay" onclick="playT2avSequential(14)">
                         <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div class="t2av-loader">
+                        <div class="spinner"></div>
                     </div>
                 </div>
                 <p class="t2av-status"></p>
@@ -4774,30 +4848,57 @@
     function playT2avSequential(slideIndex) {
         const wrapper = document.querySelector(`.t2av-wrapper[data-slide="${slideIndex}"]`);
         if (!wrapper) return;
-
+        
+        // Show loading spinner immediately
+        wrapper.classList.add('loading');
+        
         const videos = wrapper.querySelectorAll('video');
         const status = wrapper.closest('.sample-card').querySelector('.t2av-status');
-        if (videos.length < 2) return;
+        if (videos.length < 2) {
+            wrapper.classList.remove('loading');
+            return;
+        }
 
         const baselineVideo = videos[0];
         const oursVideo = videos[1];
 
+        // Stop all other t2av videos
         document.querySelectorAll('.t2av-wrapper').forEach(w => {
-            w.classList.remove('playing');
-            w.querySelectorAll('video').forEach(v => {
-                v.pause();
-                v.currentTime = 0;
-                v.classList.remove('active');
-            });
+            if (w !== wrapper) {
+                w.classList.remove('playing', 'loading');
+                w.querySelectorAll('video').forEach(v => {
+                    v.pause();
+                    v.currentTime = 0;
+                    v.classList.remove('active');
+                });
+            }
         });
         stopAllAudio();
 
-        wrapper.classList.add('playing');
-
-        status.textContent = 'Playing: Vanilla';
+        status.textContent = 'Loading...';
         status.classList.add('active');
-        baselineVideo.classList.add('active');
-        baselineVideo.play().catch(() => {});
+
+        // Function to start playback once video is ready
+        function startPlayback() {
+            wrapper.classList.remove('loading');
+            wrapper.classList.add('playing');
+            status.textContent = 'Playing: Vanilla';
+            baselineVideo.classList.add('active');
+            baselineVideo.play().catch(() => {});
+        }
+
+        // Check if video is ready or wait for it
+        if (baselineVideo.readyState >= 3) {
+            startPlayback();
+        } else {
+            baselineVideo.addEventListener('canplay', startPlayback, { once: true });
+            // Fallback timeout in case canplay doesn't fire
+            setTimeout(() => {
+                if (wrapper.classList.contains('loading')) {
+                    startPlayback();
+                }
+            }, 3000);
+        }
 
         baselineVideo.onended = function() {
             baselineVideo.classList.remove('active');
