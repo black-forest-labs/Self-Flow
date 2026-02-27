@@ -732,6 +732,10 @@
             .t2av-play-overlay {
                 top: calc(50% - 1.5rem);
             }
+            /* Mobile: show only first sample in each slide */
+            .carousel-slide .sample-card:nth-child(n+2) {
+                display: none;
+            }
         }
         
         @media (max-width: 480px) {
@@ -4864,95 +4868,17 @@
         });
     }
 
-    window.addEventListener('scroll', updateActiveSidebarLink);
+    // Throttled scroll listener for sidebar highlighting
+    let scrollThrottle = false;
+    window.addEventListener('scroll', function() {
+        if (scrollThrottle) return;
+        scrollThrottle = true;
+        requestAnimationFrame(function() {
+            updateActiveSidebarLink();
+            scrollThrottle = false;
+        });
+    });
     document.addEventListener('DOMContentLoaded', updateActiveSidebarLink);
-
-    // ── Mobile carousel adjustment ─────────────────────────────────
-    // On mobile, we split multi-sample slides into individual slides
-    let originalSlides = {};
-    let isMobileLayout = false;
-
-    function reorganizeForMobile() {
-        const isMobile = window.innerWidth <= 768;
-        
-        if (isMobile && !isMobileLayout) {
-            // Switching to mobile: split slides
-            document.querySelectorAll('[id$="-carousel"]').forEach(carousel => {
-                const carouselId = carousel.id.replace('-carousel', '');
-                const slides = carousel.querySelectorAll('.carousel-slide');
-                
-                // Store original HTML
-                originalSlides[carouselId] = carousel.innerHTML;
-                
-                // Collect all sample cards
-                const allCards = [];
-                slides.forEach(slide => {
-                    slide.querySelectorAll('.sample-card').forEach(card => {
-                        allCards.push(card.outerHTML);
-                    });
-                });
-                
-                // Create new slides with 1 card each
-                carousel.innerHTML = allCards.map(card => 
-                    `<div class="carousel-slide">${card}</div>`
-                ).join('');
-                
-                // Update carousel state
-                const newSlides = carousel.querySelectorAll('.carousel-slide');
-                carouselState[carouselId] = { current: 0, total: newSlides.length };
-                
-                // Update indicators
-                const indicatorContainer = document.getElementById(`${carouselId}-indicators`);
-                if (indicatorContainer) {
-                    indicatorContainer.innerHTML = Array.from({length: newSlides.length}, (_, i) =>
-                        `<span class="carousel-indicator${i === 0 ? ' active' : ''}" onclick="goToSlide('${carouselId}', ${i})"></span>`
-                    ).join('');
-                }
-                
-                showSlide(carouselId);
-                setupSwipe(carousel, carouselId);
-                loadCarouselWindow(carouselId);
-            });
-            isMobileLayout = true;
-        } else if (!isMobile && isMobileLayout) {
-            // Switching to desktop: restore original slides
-            document.querySelectorAll('[id$="-carousel"]').forEach(carousel => {
-                const carouselId = carousel.id.replace('-carousel', '');
-                if (originalSlides[carouselId]) {
-                    carousel.innerHTML = originalSlides[carouselId];
-                    
-                    const slides = carousel.querySelectorAll('.carousel-slide');
-                    carouselState[carouselId] = { current: 0, total: slides.length };
-                    
-                    // Restore indicators
-                    const indicatorContainer = document.getElementById(`${carouselId}-indicators`);
-                    if (indicatorContainer) {
-                        indicatorContainer.innerHTML = Array.from({length: slides.length}, (_, i) =>
-                            `<span class="carousel-indicator${i === 0 ? ' active' : ''}" onclick="goToSlide('${carouselId}', ${i})"></span>`
-                        ).join('');
-                    }
-                    
-                    showSlide(carouselId);
-                    setupSwipe(carousel, carouselId);
-                    loadCarouselWindow(carouselId);
-                }
-            });
-            isMobileLayout = false;
-        }
-    }
-
-    // Run on load and resize (with debounce for resize)
-    let resizeTimeout;
-    window.addEventListener('resize', function() {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(reorganizeForMobile, 150);
-    });
-    
-    // Initialize after DOM is ready
-    document.addEventListener('DOMContentLoaded', function() {
-        // Small delay to ensure carousels are initialized first
-        setTimeout(reorganizeForMobile, 100);
-    });
 </script>
 
 </body>
