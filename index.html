@@ -457,6 +457,18 @@
             color: var(--text-secondary);
         }
         
+        .method-video {
+            margin-bottom: 2rem;
+        }
+        
+        .method-video video {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+            box-shadow: var(--shadow-sm);
+        }
+        
         /* ===== ABSTRACT ===== */
         #abstract {
             padding-top: 2.5rem;
@@ -670,6 +682,102 @@
             font-weight: 500;
         }
         
+        /* ===== ROBOTICS COMPARISON ===== */
+        .robotics-wrapper {
+            position: relative;
+            margin-bottom: 0.5rem;
+        }
+        
+        .robotics-comparison {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+        
+        .robotics-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            max-width: 480px;
+        }
+        
+        .robotics-item video {
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--border-subtle);
+        }
+        
+        .robotics-play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 72px;
+            height: 72px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            backdrop-filter: blur(4px);
+        }
+        
+        .robotics-play-overlay:hover {
+            transform: translate(-50%, -50%) scale(1.08);
+            box-shadow: 0 6px 28px rgba(0, 0, 0, 0.2);
+        }
+        
+        .robotics-play-overlay svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--accent);
+            margin-left: 3px;
+        }
+        
+        .robotics-wrapper.playing .robotics-play-overlay,
+        .robotics-wrapper.loading .robotics-play-overlay {
+            display: none !important;
+        }
+        
+        .robotics-loader {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            display: none;
+        }
+        
+        .robotics-wrapper.loading .robotics-loader {
+            display: flex;
+        }
+        
+        .action-label {
+            font-family: 'Source Serif 4', Georgia, serif;
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .robotics-comparison {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .robotics-item {
+                max-width: 100%;
+            }
+            .robotics-play-overlay {
+                top: calc(50% - 1.5rem);
+            }
+        }
         
         /* ===== FOOTER ===== */
         footer {
@@ -1109,6 +1217,7 @@
                 <li><a href="#audio" class="sidebar-link sub" onclick="smoothScrollTo(event, 'audio')">Audio</a></li>
             </ul>
         </li>
+        <li><a href="#robotics" class="sidebar-link" onclick="smoothScrollTo(event, 'robotics')">World Models</a></li>
     </ul>
 </nav>
 
@@ -1144,6 +1253,8 @@
 </header>
 
 <section id="quantitative" class="quant-teaser">
+    <p class="quant-tldr"><strong>TL;DR:</strong> We present <strong>Self-Flow</strong>, a self-supervised flow matching framework. Across (a) image, (b) video, and (c) audio generation, Self-Flow consistently outperforms REPA, <em>without using any external models or supervision</em> by jointly modeling representation and generation.</p>
+    
     <div class="quant-row metrics">
         <figure class="quant-figure">
             <img src="figures/fid.png" alt="FID comparison" loading="lazy">
@@ -1158,7 +1269,6 @@
             <figcaption>(c) Text-to-Audio</figcaption>
         </figure>
     </div>
-    <p class="quant-tldr"><strong>TL;DR:</strong> We present <strong>Self-Flow</strong>, a modality-agnostic, self-supervised flow matching framework. Across (a) image, (b) video, and (c) audio generation, Self-Flow consistently outperforms REPA, the predominant external-alignment method, <em>without using any external models or supervision</em>. Unlike methods that rely on frozen external features or simple self-alignment, Self-Flow introduces a seamless self-supervised objective integrated directly into the flow matching process. By jointly modeling representation and generation, we demonstrate that internal feature evolution is fundamentally superior to relying on the fixed, unaligned features of external models.</p>
     
     <div class="quant-row scaling">
         <figure class="quant-figure">
@@ -1168,7 +1278,7 @@
             <img src="figures/scaling_flops.png" alt="Scaling vs FLOPs" loading="lazy">
         </figure>
     </div>
-    <p class="quant-description"><strong>Scaling behavior (Text-to-Image).</strong> As model size increases (290M → 420M → 625M → 1B parameters), the performance gap between our method and REPA widens. Notably, our 625M variant outperforms the 1B REPA model. Our method effectively leverages increased compute, while REPA shows diminishing returns.</p>
+    <p class="quant-description"><strong>Scaling behavior (Text-to-Image).</strong> As model size increases (290M → 420M → 625M → 1B parameters), the performance gap between our method and REPA widens. Our method effectively leverages increased compute, while REPA shows diminishing returns.</p>
 </section>
 
 <hr>
@@ -1187,11 +1297,11 @@
 <section id="teaser">
     <div class="section-header">
         <h2 class="section-title">Joint Multi-Modal Training Comparison</h2>
-        <p class="section-description">We benchmark our method against vanilla flow matching on a scaled multi-modal experiment where a <strong>single 4B parameter</strong> FLUX2 backbone is trained to jointly generate images, videos and audio. The results presented were obtained with just <strong>100k training steps</strong> of high resolution fine-tuning over a low resolution multi-modal model, on data containing just <strong>6M training videos</strong> and <strong>200M training images</strong>. Our method produces significant improvements in structural coherence (faces, hands), motion quality, and text rendering accuracy.</p>
+        <p class="section-description">We benchmark our method against vanilla flow matching on a scaled multi-modal experiment where a <strong>single 4B parameter</strong> FLUX.2 backbone is trained to jointly generate images, videos and audio. The results presented were obtained with just <strong>100k steps</strong> of high resolution fine-tuning over a low resolution multi-modal model, on data containing just <strong>6M training videos</strong> and <strong>200M training images</strong>. Our method produces significant improvements in structural coherence (faces, hands), motion quality, and text rendering accuracy.</p>
     </div>
     
     <h3 id="teaser-images-section" style="font-family: 'Source Serif 4', serif; font-size: 1.3rem; margin: 2rem 0 0.5rem; color: var(--text-secondary);">Image Samples</h3>
-    <p class="subsection-description"><strong>4B parameter</strong> model trained on <strong>200M images</strong> for <strong>100k steps</strong>.</p>
+    <p class="subsection-description"><strong>4B parameter</strong> multi-modal model trained on <strong>200M images</strong> for <strong>100k high-resolution fine-tuning steps</strong>.</p>
     <div class="carousel-container">
         <button class="carousel-nav prev" onclick="prevSlide('teaser-images')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1790,7 +1900,7 @@
     </div>
     
     <h3 id="teaser-videos-section" style="font-family: 'Source Serif 4', serif; font-size: 1.3rem; margin: 2rem 0 0.5rem; color: var(--text-secondary);">Video Samples</h3>
-    <p class="subsection-description"><strong>4B parameter</strong> model trained on <strong>6M videos</strong> for <strong>100k steps</strong>.</p>
+    <p class="subsection-description"><strong>4B parameter</strong> multi-modal model trained on <strong>6M videos</strong> for <strong>100k high-resolution fine-tuning steps</strong>.</p>
     <div class="carousel-container">
         <button class="carousel-nav prev" onclick="prevSlide('teaser')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -2165,7 +2275,7 @@
     </div>
     
     <h3 id="t2av-section" style="font-family: 'Source Serif 4', serif; font-size: 1.3rem; margin: 2rem 0 0.5rem; color: var(--text-secondary);">Joint Video-Audio Samples</h3>
-    <p class="subsection-description"><strong>4B parameter</strong> model trained on <strong>2M audio-video pairs</strong> for <strong>100k steps</strong>. Click play to watch baseline and ours sequentially.</p>
+    <p class="subsection-description"><strong>4B parameter</strong> multi-modal model trained on <strong>2M audio-video pairs</strong> for <strong>100k high-resolution fine-tuning steps</strong>. Click play to watch baseline and ours sequentially.</p>
     <div class="carousel-container">
         <button class="carousel-nav prev" onclick="prevSlide('t2av')">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -2661,9 +2771,12 @@
     </div>
     
     <div class="method-section">
-        <p class="method-description">
-            We introduce a self-supervised flow matching paradigm that integrates representation learning directly into generative training. Through Dual-Timestep Scheduling, we apply heterogeneous noise levels to different subsets of input tokens, creating an information asymmetry. The model is then tasked with simultaneously denoising the input and <em>reconstructing the representations it would produce from a cleaner view</em>, encouraging it to learn strong semantic features alongside generative capabilities without external supervision.
-        </p>
+        <div class="method-video">
+            <video controls preload="none" playsinline webkit-playsinline poster="self_flow_teaser_poster.webp">
+                <source src="self_flow_teaser_short.webm" type="video/webm">
+                Your browser does not support the video tag.
+            </video>
+        </div>
         
         <figure class="method-figure">
             <img src="architecture.webp" alt="Method architecture">
@@ -4527,6 +4640,152 @@
 
 <hr>
 
+<section id="robotics">
+    <div class="section-header">
+        <h2 class="section-title">Future Work — World Models</h2>
+        <p class="section-description">Looking ahead, by bridging representation learning and generative modeling, our approach offers a path toward world models that harness the scalability and perceptual grounding of visual generative models without sacrificing the semantic abstraction required for planning and understanding. We present results obtained by fine-tuning our video-weighted multi-modal runs (with 675M parameters) for action predictions. We employ the SIMPLER simulator to visualize the action predictions.</p>
+    </div>
+    
+    <div class="carousel-container">
+        <button class="carousel-nav prev" onclick="prevSlide('robotics')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"/>
+            </svg>
+        </button>
+        
+        <div class="carousel-wrapper" id="robotics-carousel">
+            
+        <div class="carousel-slide active">
+            
+            <div class="sample-card">
+                <div class="robotics-wrapper" data-slide="0">
+                    <div class="robotics-comparison">
+                        <div class="robotics-item">
+                            <span class="method-label">Flow Matching</span>
+                            <video preload="metadata" playsinline webkit-playsinline>
+                                <source src="robotics_webm/google_robot_move_near_baseline.webm" type="video/webm">
+                            </video>
+                        </div>
+                        <div class="robotics-item">
+                            <span class="method-label ours">Ours</span>
+                            <video preload="metadata" playsinline webkit-playsinline>
+                                <source src="robotics_webm/google_robot_move_near_ours.webm" type="video/webm">
+                            </video>
+                        </div>
+                    </div>
+                    <div class="robotics-play-overlay" onclick="playRoboticsSimultaneous(0)">
+                        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div class="robotics-loader">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+                <p class="action-label">Action: "Move Near"</p>
+            </div>
+        </div>
+        <div class="carousel-slide">
+            
+            <div class="sample-card">
+                <div class="robotics-wrapper" data-slide="1">
+                    <div class="robotics-comparison">
+                        <div class="robotics-item">
+                            <span class="method-label">Flow Matching</span>
+                            <video preload="metadata" playsinline webkit-playsinline>
+                                <source src="robotics_webm/google_robot_close_bottom_drawer_baseline.webm" type="video/webm">
+                            </video>
+                        </div>
+                        <div class="robotics-item">
+                            <span class="method-label ours">Ours</span>
+                            <video preload="metadata" playsinline webkit-playsinline>
+                                <source src="robotics_webm/google_robot_close_bottom_drawer_ours.webm" type="video/webm">
+                            </video>
+                        </div>
+                    </div>
+                    <div class="robotics-play-overlay" onclick="playRoboticsSimultaneous(1)">
+                        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div class="robotics-loader">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+                <p class="action-label">Action: "Close Bottom Drawer"</p>
+            </div>
+        </div>
+        <div class="carousel-slide">
+            
+            <div class="sample-card">
+                <div class="robotics-wrapper" data-slide="2">
+                    <div class="robotics-comparison">
+                        <div class="robotics-item">
+                            <span class="method-label">Flow Matching</span>
+                            <video preload="metadata" playsinline webkit-playsinline>
+                                <source src="robotics_webm/google_robot_pick_standing_coke_can_baseline.webm" type="video/webm">
+                            </video>
+                        </div>
+                        <div class="robotics-item">
+                            <span class="method-label ours">Ours</span>
+                            <video preload="metadata" playsinline webkit-playsinline>
+                                <source src="robotics_webm/google_robot_pick_standing_coke_can_ours.webm" type="video/webm">
+                            </video>
+                        </div>
+                    </div>
+                    <div class="robotics-play-overlay" onclick="playRoboticsSimultaneous(2)">
+                        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div class="robotics-loader">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+                <p class="action-label">Action: "Pick Standing Coke Can"</p>
+            </div>
+        </div>
+        <div class="carousel-slide">
+            
+            <div class="sample-card">
+                <div class="robotics-wrapper" data-slide="3">
+                    <div class="robotics-comparison">
+                        <div class="robotics-item">
+                            <span class="method-label">Flow Matching</span>
+                            <video preload="metadata" playsinline webkit-playsinline>
+                                <source src="robotics_webm/google_robot_place_apple_in_closed_top_drawer_baseline.webm" type="video/webm">
+                            </video>
+                        </div>
+                        <div class="robotics-item">
+                            <span class="method-label ours">Ours</span>
+                            <video preload="metadata" playsinline webkit-playsinline>
+                                <source src="robotics_webm/google_robot_place_apple_in_closed_top_drawer_ours.webm" type="video/webm">
+                            </video>
+                        </div>
+                    </div>
+                    <div class="robotics-play-overlay" onclick="playRoboticsSimultaneous(3)">
+                        <svg viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    </div>
+                    <div class="robotics-loader">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+                <p class="action-label">Action: "Place Apple In Closed Top Drawer"</p>
+            </div>
+        </div>
+        </div>
+        
+        <button class="carousel-nav next" onclick="nextSlide('robotics')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 18l6-6-6-6"/>
+            </svg>
+        </button>
+    </div>
+    
+    <div class="carousel-indicators" id="robotics-indicators">
+        <span class="carousel-indicator active" onclick="goToSlide('robotics', 0)"></span>
+        <span class="carousel-indicator" onclick="goToSlide('robotics', 1)"></span>
+        <span class="carousel-indicator" onclick="goToSlide('robotics', 2)"></span>
+        <span class="carousel-indicator" onclick="goToSlide('robotics', 3)"></span>
+    </div>
+</section>
+
+<hr>
+
 <footer>
     <div class="footer-content">
         <p class="footer-text">Self-Supervised Flow Matching for Scalable Multi-Modal Synthesis</p>
@@ -4909,6 +5168,88 @@
             status.textContent = '';
             status.classList.remove('active');
         };
+    }
+
+    // ── Robotics Simultaneous Playback ─────────────────────────────
+    function playRoboticsSimultaneous(slideIndex) {
+        const wrapper = document.querySelector(`.robotics-wrapper[data-slide="${slideIndex}"]`);
+        if (!wrapper) return;
+        
+        // Show loading spinner immediately
+        wrapper.classList.add('loading');
+        
+        const videos = wrapper.querySelectorAll('video');
+        if (videos.length < 2) {
+            wrapper.classList.remove('loading');
+            return;
+        }
+
+        const baselineVideo = videos[0];
+        const oursVideo = videos[1];
+
+        // Stop all other robotics videos
+        document.querySelectorAll('.robotics-wrapper').forEach(w => {
+            if (w !== wrapper) {
+                w.classList.remove('playing', 'loading');
+                w.querySelectorAll('video').forEach(v => {
+                    v.pause();
+                    v.currentTime = 0;
+                });
+            }
+        });
+        stopAllAudio();
+        stopAllT2avVideos();
+
+        let readyCount = 0;
+        const totalVideos = 2;
+
+        function checkAndPlay() {
+            readyCount++;
+            if (readyCount >= totalVideos) {
+                wrapper.classList.remove('loading');
+                wrapper.classList.add('playing');
+                baselineVideo.play().catch(() => {});
+                oursVideo.play().catch(() => {});
+            }
+        }
+
+        // Wait for both videos to be ready
+        if (baselineVideo.readyState >= 3) {
+            checkAndPlay();
+        } else {
+            baselineVideo.addEventListener('canplay', checkAndPlay, { once: true });
+        }
+
+        if (oursVideo.readyState >= 3) {
+            checkAndPlay();
+        } else {
+            oursVideo.addEventListener('canplay', checkAndPlay, { once: true });
+        }
+
+        // Fallback timeout
+        setTimeout(() => {
+            if (wrapper.classList.contains('loading')) {
+                wrapper.classList.remove('loading');
+                wrapper.classList.add('playing');
+                baselineVideo.play().catch(() => {});
+                oursVideo.play().catch(() => {});
+            }
+        }, 3000);
+
+        // When both videos end, show play button again
+        let endedCount = 0;
+        function onVideoEnded() {
+            endedCount++;
+            if (endedCount >= 2) {
+                wrapper.classList.remove('playing');
+                baselineVideo.currentTime = 0;
+                oursVideo.currentTime = 0;
+                endedCount = 0;
+            }
+        }
+
+        baselineVideo.onended = onVideoEnded;
+        oursVideo.onended = onVideoEnded;
     }
 
     // ── Sidebar Navigation ─────────────────────────────────────────
