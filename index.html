@@ -479,6 +479,20 @@
             box-shadow: var(--shadow-sm);
         }
         
+        .teaser-video-section {
+            max-width: 900px;
+            margin: 0 auto 1.5rem;
+            padding: 0 2rem;
+        }
+        
+        .teaser-video-section .method-video {
+            margin-bottom: 0;
+        }
+        
+        .scaling-figures {
+            margin-top: 2rem;
+        }
+        
         /* ===== ABSTRACT ===== */
         #abstract {
             padding-top: 2.5rem;
@@ -1064,7 +1078,7 @@
         /* ===== QUANTITATIVE TEASER ===== */
         .quant-teaser {
             padding: 1.5rem 2rem 1rem;
-            max-width: 1300px;
+            max-width: 1000px;
             margin: 0 auto;
         }
         
@@ -1263,6 +1277,15 @@
     </div>
 </header>
 
+<section id="teaser-video" class="teaser-video-section">
+    <div class="method-video">
+        <video controls preload="none" playsinline webkit-playsinline poster="self_flow_teaser_poster.webp">
+            <source src="self_flow_teaser_short.webm" type="video/webm">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+</section>
+
 <section id="quantitative" class="quant-teaser">
     <p class="quant-tldr"><strong>TL;DR:</strong> We present <strong>Self-Flow</strong>, a self-supervised flow matching framework. Across (a) image, (b) video, and (c) audio generation, Self-Flow consistently outperforms REPA, <em>without using any external models or supervision</em> by jointly modeling representation and generation.</p>
     
@@ -1280,16 +1303,6 @@
             <figcaption>(c) Text-to-Audio</figcaption>
         </figure>
     </div>
-    
-    <div class="quant-row scaling">
-        <figure class="quant-figure">
-            <img src="figures/scaling_score.png" alt="Scaling vs training steps" loading="lazy">
-        </figure>
-        <figure class="quant-figure">
-            <img src="figures/scaling_flops.png" alt="Scaling vs FLOPs" loading="lazy">
-        </figure>
-    </div>
-    <p class="quant-description"><strong>Scaling behavior (Text-to-Image).</strong> As model size increases (290M → 420M → 625M → 1B parameters), the performance gap between our method and REPA widens. Our method effectively leverages increased compute, while REPA shows diminishing returns.</p>
 </section>
 
 <hr>
@@ -2782,13 +2795,6 @@
     </div>
     
     <div class="method-section">
-        <div class="method-video">
-            <video controls preload="none" playsinline webkit-playsinline poster="self_flow_teaser_poster.webp">
-                <source src="self_flow_teaser_short.webm" type="video/webm">
-                Your browser does not support the video tag.
-            </video>
-        </div>
-        
         <figure class="method-figure">
             <img src="architecture.webp" alt="Method architecture">
             <figcaption>
@@ -2796,6 +2802,18 @@
                 Given a clean input <em>x</em><sub>0</sub>, we draw two timesteps <em>t</em><sub>base</sub>, <em>t</em><sub>secondary</sub>, and a random mask <em>M</em>, then noise each token according to its assigned timestep. The teacher receives the less noisy input, and the student is trained to simultaneously denoise the input and reconstruct the teacher's features.
              </figcaption>
         </figure>
+        
+        <div class="scaling-figures">
+            <div class="quant-row scaling">
+                <figure class="quant-figure">
+                    <img src="figures/scaling_score.png" alt="Scaling vs training steps" loading="lazy">
+                </figure>
+                <figure class="quant-figure">
+                    <img src="figures/scaling_flops.png" alt="Scaling vs FLOPs" loading="lazy">
+                </figure>
+            </div>
+            <p class="quant-description"><strong>Scaling behavior (Text-to-Image).</strong> As model size increases (290M → 420M → 625M → 1B parameters), the performance gap between our method and REPA widens. Our method effectively leverages increased compute, while REPA shows diminishing returns.</p>
+        </div>
     </div>
 </section>
 
@@ -2804,7 +2822,7 @@
 <section id="images">
     <div class="section-header">
         <h2 class="section-title">Image Generation Comparison</h2>
-        <p class="section-description">All models use a <strong>650M parameter</strong> backbone trained on <strong>20M images</strong>. We benchmark against vanilla flow matching and leading approaches for improving diffusion representations. For external alignment methods, we compare against REPA with DINOv2 and REPA with SigLIP2. For methods without external models, we compare against SRA. Our method achieves superior visual quality and prompt adherence across diverse prompts.</p>
+        <p class="section-description">All models use a <strong>625M parameter</strong> backbone trained on <strong>20M images</strong>. We benchmark against vanilla flow matching and leading approaches for improving diffusion representations. For external alignment methods, we compare against REPA with DINOv2 and REPA with SigLIP2. For methods without external models, we compare against SRA. Our method achieves superior visual quality and prompt adherence across diverse prompts.</p>
     </div>
     
     <div class="carousel-container">
@@ -3648,7 +3666,7 @@
 <section id="videos">
     <div class="section-header">
         <h2 class="section-title">Video Generation Comparison</h2>
-        <p class="section-description">All models use a <strong>650M parameter</strong> backbone trained on just <strong>6M videos</strong>. We compare against vanilla flow matching, REPA with DINOv2 for external alignment, and SRA as the leading method without external models. Interestingly, DINOv2 remains the strongest external encoder for video generation, outperforming video-specific encoders such as V-JEPA 2 and advanced spatial learners such as Depth Anything 3 (see Sec. 4). Our method achieves superior results across all baselines.</p>
+        <p class="section-description">All models use a <strong>625M parameter</strong> backbone trained on just <strong>6M videos</strong>. We compare against vanilla flow matching, REPA with DINOv2 for external alignment, and SRA as the leading method without external models. Interestingly, DINOv2 remains the strongest external encoder for video generation, outperforming video-specific encoders such as V-JEPA 2 and advanced spatial learners such as Depth Anything 3 (see Sec. 4). Our method achieves superior results across all baselines.</p>
     </div>
     
     <div class="carousel-container">
@@ -4288,7 +4306,7 @@
 <section id="audio">
     <div class="section-header">
         <h2 class="section-title">Audio Generation Comparison</h2>
-        <p class="section-description">All models use a <strong>650M parameter</strong> backbone trained on the <strong>FMA music dataset</strong>. We compare against vanilla flow matching, REPA with MERT for external alignment, and SRA as the leading method without external models. Consistent with our findings on video, external alignment with MERT provides no benefit over vanilla flow matching on audio generation (see Sec. 4), demonstrating that external alignment fails to generalize beyond image-centric tasks. Our method achieves superior results without relying on any external representations.</p>
+        <p class="section-description">All models use a <strong>625M parameter</strong> backbone trained on the <strong>FMA music dataset</strong>. We compare against vanilla flow matching, REPA with MERT for external alignment, and SRA as the leading method without external models. Consistent with our findings on video, external alignment with MERT provides no benefit over vanilla flow matching on audio generation (see Sec. 4), demonstrating that external alignment fails to generalize beyond image-centric tasks. Our method achieves superior results without relying on any external representations.</p>
     </div>
     
     <div class="carousel-container">
