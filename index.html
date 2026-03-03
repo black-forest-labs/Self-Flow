@@ -2808,7 +2808,7 @@
             <img src="architecture.webp" alt="Method architecture">
             <figcaption>
                 <span class="fig-title">Illustration of our method.</span>
-                Given a clean input <em>x</em><sub>0</sub>, we draw two timesteps <em>t</em><sub>base</sub>, <em>t</em><sub>secondary</sub>, and a random mask <em>M</em>, then noise each token according to its assigned timestep. The teacher receives the less noisy input, and the student is trained to simultaneously denoise the input and reconstruct the teacher's features.
+                Given a clean input <em>x</em><sub>0</sub>, we draw two timesteps <em>t</em>, <em>s</em>, and a random mask <em>M</em>, then noise each token according to its assigned timestep. The teacher input is noised with <em>τ</em><sub>min</sub>=min{<em>t</em>,<em>s</em>}, creating an information asymmetry compared to the student. The student is trained to simultaneously denoise the input and reconstruct the teacher's features given its mixed-noised view.
              </figcaption>
         </figure>
         
