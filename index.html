@@ -1102,6 +1102,15 @@
             gap: 0.85rem;
             max-width: 66.666%;
             margin: 0 auto 0.25rem;
+            align-items: end;
+        }
+        
+        .quant-row.scaling .quant-figure img {
+            height: 280px;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+            margin: 0 auto;
         }
         
         .quant-figure {
@@ -2813,6 +2822,20 @@
                 </figure>
             </div>
             <p class="quant-description"><strong>Scaling behavior (Text-to-Image).</strong> As model size increases (290M → 420M → 625M → 1B parameters), the performance gap between our method and REPA widens. Our method effectively leverages increased compute, while REPA shows diminishing returns.</p>
+        </div>
+        
+        <div class="scaling-figures">
+            <div class="quant-row scaling">
+                <figure class="quant-figure">
+                    <img src="figures/radar.png" alt="Multi-Modal Training" loading="lazy">
+                    <figcaption>(a) Multi-Modal Training</figcaption>
+                </figure>
+                <figure class="quant-figure">
+                    <img src="figures/radar_plot.png" alt="Joint Video-Action Training" loading="lazy">
+                    <figcaption>(b) Joint Video-Action Training</figcaption>
+                </figure>
+            </div>
+            <p class="quant-description"><strong>Multi-modal experiments.</strong> (a) We train a single model on three modalities with different weightings to control the trade-off between them. Self-Flow provides consistent improvements (shaded area) across all settings. Axes are inverted so that larger area indicates better performance. (b) Success rates for joint Video-Action prediction. Early on (30k), Self-Flow outperforms flow matching (FM) across all tasks and achieves success in all task categories, whereas FM fails entirely on Open and Place tasks. Later (100k), performance on single-object tasks (Pick Coke Can, Open/Close Drawer) converges, while Self-Flow maintains a significant advantage on complex multi-object and sequential tasks (Move Near, Open and Place).</p>
         </div>
     </div>
 </section>
