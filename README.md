@@ -1,4 +1,19 @@
-# Self-Flow ImageNet Inference
+<h1 align="center"> Self-Supervised Flow Matching for Scalable Multi-Modal Synthesis (Self-Flow)
+</h1>
+
+<p align="center">
+  <strong>Hila Chefer*</strong> · <strong>Patrick Esser*</strong> <br> <strong>Dominik Lorenz</strong> · <strong>Dustin Podell</strong> · <strong>Vikash Raja</strong> · <strong>Vinh Tong</strong> · <strong>Antonio Torralba</strong> · <strong>Robin Rombach</strong>  <br>
+  <em>Black Forest Labs</em>
+</p>
+
+<p align="center">
+  <a href="https://bfl.ai/research/self-flow">
+    <img src="https://img.shields.io/badge/Project-Website-blue?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Project Website">
+  </a>
+  <a href="https://cdn.sanity.io/files/2gpum2i6/production/3264c9e34dfcbbf57e57ca7efee0a3e83d311a83.pdf">
+    <img src="https://img.shields.io/badge/Paper-PDF-red?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="Paper PDF">
+  </a>
+</p>
 
 This folder contains inference code for generating images with our [Self-Flow](https://bfl.ai/research/self-flow) trained diffusion model on ImageNet 256×256.
 
