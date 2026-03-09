@@ -13,6 +13,9 @@
   <a href="https://cdn.sanity.io/files/2gpum2i6/production/3264c9e34dfcbbf57e57ca7efee0a3e83d311a83.pdf">
     <img src="https://img.shields.io/badge/Paper-PDF-red?style=for-the-badge&logo=adobeacrobatreader&logoColor=white" alt="Paper PDF">
   </a>
+    <a href="https://arxiv.org/abs/2603.06507">
+    <img src="https://img.shields.io/badge/arXiv-2603.06507-b31b1b?style=for-the-badge&logo=arxiv&logoColor=white" alt="arXiv">
+  </a>
 </p>
 
 This folder contains inference code for generating images with our [Self-Flow](https://bfl.ai/research/self-flow) trained diffusion model on ImageNet 256×256.
@@ -135,3 +138,15 @@ The model was trained using the following configuration:
 This code builds upon:
 - [REPA](https://github.com/sihyun-yu/REPA) - Representation Alignment for Generation
 - [SiT](https://github.com/willisma/SiT) - Scalable Interpolant Transformers
+
+## BibTeX
+If you use this work, please cite: 
+
+```bibtex
+@article{CheferEsser2026selfflow,
+      title={Self-Supervised Flow Matching for Scalable Multi-Modal Synthesis}, 
+      author={Hila Chefer and Patrick Esser and Dominik Lorenz and Dustin Podell and Vikash Raja and Vinh Tong and Antonio Torralba and Robin Rombach},
+      journal = {arXiv preprint arXiv:2603.06507},
+      year={2026},
+}
+```
