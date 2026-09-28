@@ -87,7 +87,7 @@ python sample.py \
 
 ## Evaluation
 
-The generated `.npz` file can be used with the [ADM evaluation suite](https://github.com/openai/guided-diffusion/tree/main/evaluations) to compute FID, IS, Precision, and Recall.
+The generated `.npz` file can be used with the [ADM evaluation suite](https://github.com/openai/guided-diffusion/tree/main/evaluations) to compute FID, IS, Precision, and Recall. `evaluator.py` ships with that suite (it is not part of this repository).
 
 ### Download Reference Statistics
 
@@ -97,8 +97,11 @@ wget https://openaipublic.blob.core.windows.net/diffusion/jul-2021/ref_batches/i
 
 ### Run Evaluation
 
+Clone [guided-diffusion](https://github.com/openai/guided-diffusion) and run its evaluator against your sample batch:
+
 ```bash
-python evaluator.py \
+git clone https://github.com/openai/guided-diffusion.git
+python guided-diffusion/evaluations/evaluator.py \
     VIRTUAL_imagenet256_labeled.npz \
     ./samples/samples_50000.npz ./samples
 ```
